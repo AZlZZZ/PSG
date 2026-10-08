@@ -1,0 +1,2534 @@
+<div class="admin-shell">
+  <!-- Top Navigation Header -->
+  <header class="admin-header">
+    <div class="header-left">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">PSG Admin</span>
+          <span class="brand-badge">Politique de Sécurité Gouvernementale</span>
+        </div>
+      </div>
+
+      <nav class="admin-nav" aria-label="Navigation principale">
+        <button 
+          type="button" 
+          class="nav-tab" 
+          [class.active]="activeTab() === 'dashboard'"
+          (click)="setActiveTab('dashboard')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9"/>
+            <rect x="14" y="3" width="7" height="5"/>
+            <rect x="14" y="12" width="7" height="9"/>
+            <rect x="3" y="16" width="7" height="5"/>
+          </svg>
+          <span>Tableau de bord</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="nav-tab" 
+          [class.active]="activeTab() === 'organizations'"
+          (click)="setActiveTab('organizations')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+            <line x1="9" y1="6" x2="9" y2="6"/>
+            <line x1="15" y1="6" x2="15" y2="6"/>
+            <line x1="9" y1="10" x2="9" y2="10"/>
+            <line x1="15" y1="10" x2="15" y2="10"/>
+            <line x1="9" y1="14" x2="9" y2="14"/>
+            <line x1="15" y1="14" x2="15" y2="14"/>
+            <line x1="9" y1="18" x2="15" y2="18"/>
+          </svg>
+          <span>Organisations</span>
+          <span class="tab-count">{{ totalOrganizations() }}</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="nav-tab" 
+          [class.active]="activeTab() === 'evaluations'"
+          (click)="setActiveTab('evaluations')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <span>Évaluations</span>
+          <span class="tab-count">{{ totalEvaluations() }}</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="nav-tab" 
+          [class.active]="activeTab() === 'analytics'"
+          (click)="setActiveTab('analytics')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          <span>Analytique</span>
+        </button>
+
+        <button 
+          type="button" 
+          class="nav-tab" 
+          [class.active]="activeTab() === 'psg'"
+          (click)="setActiveTab('psg')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+          <span>PSG</span>
+          <span class="tab-count">93</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <div class="user-info">
+        <span class="user-role">Super Administrateur</span>
+        <span class="user-email">admin@ancs.gov.tn</span>
+      </div>
+      <button type="button" class="btn-logout" (click)="authService.logout()" title="Déconnexion">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="admin-main">
+    
+    <!-- SECTION 1: TABLEAU DE BORD -->
+    @if (activeTab() === 'dashboard') {
+      <div class="tab-content animate-fade">
+        <div class="page-intro">
+          <div>
+            <h1>Tableau de bord institutionnel</h1>
+            <p class="subtitle">Vue d'ensemble de la conformité globale et de la gestion des évaluations ANCS.</p>
+          </div>
+          <div class="action-bar">
+            <button type="button" class="btn-primary" (click)="setActiveTab('evaluations')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <span>Nouvelle évaluation</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="card-header">
+              <span class="metric-title">Organisations répertoriées</span>
+              <div class="metric-icon navy">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                  <line x1="9" y1="6" x2="15" y2="6"/>
+                  <line x1="9" y1="10" x2="15" y2="10"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-body">
+              <span class="metric-value">{{ totalOrganizations() }}</span>
+              <span class="metric-sub">Entités et organismes enregistrés</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="card-header">
+              <span class="metric-title">Évaluations totales</span>
+              <div class="metric-icon blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-body">
+              <span class="metric-value">{{ totalEvaluations() }}</span>
+              <span class="metric-sub">Campagnes d'évaluation initiées</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="card-header">
+              <span class="metric-title">Évaluations en cours</span>
+              <div class="metric-icon amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-body">
+              <span class="metric-value">{{ inProgressEvaluations() }}</span>
+              <span class="metric-sub">Assignées ou en saisie par l'organisme</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="card-header">
+              <span class="metric-title">Évaluations complétées</span>
+              <div class="metric-icon emerald">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-body">
+              <span class="metric-value">{{ completedEvaluations() }}</span>
+              <span class="metric-sub">Soumises et validées</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Evaluations Overview -->
+        <div class="content-panel margin-top-lg">
+          <div class="panel-header">
+            <div>
+              <h3>Évaluations récentes</h3>
+              <p class="panel-sub">Dernières campagnes d'évaluation en cours de suivi</p>
+            </div>
+            <button type="button" class="btn-link" (click)="setActiveTab('evaluations')">Voir toutes les évaluations &rarr;</button>
+          </div>
+
+          @if (loadingEvaluations()) {
+            <div class="state-container">
+              <div class="spinner"></div>
+              <span>Chargement des données en cours...</span>
+            </div>
+          } @else if (evaluations().length === 0) {
+            <div class="state-container empty">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <p>Aucune évaluation créée pour le moment.</p>
+              <button type="button" class="btn-secondary" (click)="setActiveTab('evaluations')">Créer une évaluation</button>
+            </div>
+          } @else {
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Réf</th>
+                    <th>Organisation</th>
+                    <th>Statut</th>
+                    <th>Éléments</th>
+                    <th>Date de création</th>
+                    <th>Dernière mise à jour</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (evalItem of evaluations().slice(0, 5); track evalItem.id) {
+                    <tr>
+                      <td class="font-mono">#{{ evalItem.id }}</td>
+                      <td class="font-medium">{{ evalItem.organizationName }}</td>
+                      <td>
+                        <span class="badge" [class]="getEvaluationStatusClass(evalItem.status)">
+                          {{ getEvaluationStatusLabel(evalItem.status) }}
+                        </span>
+                      </td>
+                      <td>{{ evalItem.itemCount }} contrôles</td>
+                      <td>{{ evalItem.createdAt | date:'dd/MM/yyyy' }}</td>
+                      <td>{{ evalItem.updatedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- SECTION 2: ORGANISATIONS -->
+    @if (activeTab() === 'organizations') {
+      <div class="tab-content animate-fade">
+        <div class="page-intro">
+          <div>
+            <h1>Gestion des Organisations</h1>
+            <p class="subtitle">Répertoire institutionnel des organismes soumis au cadre réglementaire PSG.</p>
+          </div>
+        </div>
+
+        @if (orgMessage(); as msg) {
+          <div class="alert alert-success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>{{ msg }}</span>
+          </div>
+        }
+        @if (orgError(); as error) {
+          <div class="alert alert-danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>{{ error }}</span>
+          </div>
+        }
+
+        <div class="grid-layout-2col">
+          <!-- Form Card: Create / Edit Organization -->
+          <div class="content-panel">
+            <div class="panel-header">
+              <h3>{{ editingOrgId() ? 'Modifier l\'organisation' : 'Ajouter une organisation' }}</h3>
+              <p class="panel-sub">Renseignez les informations de l'entité et son secteur d'activité</p>
+            </div>
+
+            <form [formGroup]="orgForm" (ngSubmit)="saveOrganization()" class="form-stacked">
+              <div class="form-group">
+                <label for="orgName">Nom de l'organisation *</label>
+                <input 
+                  id="orgName" 
+                  type="text" 
+                  formControlName="name" 
+                  placeholder="Ex: Ministère des Technologies" 
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="orgSector">Secteur d'activité *</label>
+                <select id="orgSector" formControlName="sectorId" class="form-control">
+                  <option value="" disabled selected>Sélectionner un secteur d'activité...</option>
+                  @for (sector of sectors(); track sector.id) {
+                    <option [value]="sector.id">{{ sector.name }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary" [disabled]="orgForm.invalid || orgSaving()">
+                  @if (orgSaving()) {
+                    <span class="spinner-sm"></span>
+                    <span>Enregistrement...</span>
+                  } @else {
+                    <span>{{ editingOrgId() ? 'Enregistrer les modifications' : 'Créer l\'organisation' }}</span>
+                  }
+                </button>
+                @if (editingOrgId()) {
+                  <button type="button" class="btn-secondary" (click)="cancelEditOrganization()">Annuler</button>
+                }
+              </div>
+            </form>
+          </div>
+
+          <!-- Table Panel: Organizations List -->
+          <div class="content-panel">
+            <div class="panel-header">
+              <div>
+                <h3>Organisations inscrites</h3>
+                <p class="panel-sub">Liste complète des organismes et gestion de leurs comptes d'accès</p>
+              </div>
+              <span class="badge badge-neutral">{{ organizations().length }} entités</span>
+            </div>
+
+            @if (loadingOrganizations()) {
+              <div class="state-container">
+                <div class="spinner"></div>
+                <span>Chargement des organisations...</span>
+              </div>
+            } @else if (organizations().length === 0) {
+              <div class="state-container empty">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                </svg>
+                <p>Aucune organisation n'a encore été enregistrée.</p>
+              </div>
+            } @else {
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Secteur</th>
+                      <th>Identifiant d'accès</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (org of organizations(); track org.id) {
+                      <tr>
+                        <td>
+                          <div class="org-cell">
+                            <span class="org-title">{{ org.name }}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="badge badge-sector">{{ org.sectorName || getSectorName(org.sectorId) }}</span>
+                        </td>
+                        <td>
+                          @if (getFirmUserForOrg(org.id); as user) {
+                            <span class="account-badge configured">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                              </svg>
+                              <span>{{ user.username }}</span>
+                            </span>
+                          } @else {
+                            <span class="account-badge unconfigured">Non configuré</span>
+                          }
+                        </td>
+                        <td class="text-right">
+                          <div class="action-buttons">
+                            <!-- Account Credentials Config Button -->
+                            <button 
+                              type="button" 
+                              class="btn-icon key-btn" 
+                              (click)="openAccountModal(org)" 
+                              title="Gérer les identifiants d'accès (nom d'utilisateur / mot de passe)">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                              </svg>
+                            </button>
+                            <button type="button" class="btn-icon" (click)="startEditOrganization(org)" title="Modifier l'organisation">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                              </svg>
+                            </button>
+                            <button type="button" class="btn-icon danger" (click)="deleteOrganization(org)" title="Supprimer">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- SECTION 3: ÉVALUATIONS -->
+    @if (activeTab() === 'evaluations') {
+      <div class="tab-content animate-fade">
+        <div class="page-intro">
+          <div>
+            <h1>Gestion des Évaluations</h1>
+            <p class="subtitle">Création, affectation et suivi des processus d'évaluation de conformité PSG.</p>
+          </div>
+          <div class="action-bar">
+            @if (editingEvalId()) {
+              <button type="button" class="btn-secondary" (click)="cancelEditEvaluation()" title="Annuler la modification en cours">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                <span>Annuler la modification</span>
+              </button>
+            } @else {
+              <button type="button" class="btn-primary" (click)="startCreateEvaluation()" title="Initier une nouvelle évaluation">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                <span>Nouvelle évaluation</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (evalMessage(); as msg) {
+          <div class="alert alert-success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>{{ msg }}</span>
+          </div>
+        }
+        @if (evalError(); as error) {
+          <div class="alert alert-danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>{{ error }}</span>
+          </div>
+        }
+
+        <!-- Create / Edit Evaluation Form Card -->
+        <div class="content-panel margin-bottom-lg" id="evalFormCard">
+          <div class="panel-header">
+            <h3>{{ editingEvalId() ? 'Mise à jour du statut — Dossier #' + editingEvalId() : 'Initier une nouvelle évaluation' }}</h3>
+            <p class="panel-sub">Sélectionnez une organisation pour générer son dossier d'évaluation ISO/IEC 27002:2022</p>
+          </div>
+
+          <form [formGroup]="evalForm" (ngSubmit)="saveEvaluation()" class="form-grid">
+            <div class="form-group">
+              <label for="evalOrgSelect">Organisation destinataire *</label>
+              <select 
+                id="evalOrgSelect" 
+                formControlName="organizationId" 
+                class="form-control"
+                [attr.disabled]="editingEvalId() ? true : null">
+                <option value="" disabled selected>Sélectionner l'organisation...</option>
+                @for (org of organizations(); track org.id) {
+                  <option [value]="org.id">{{ org.name }}</option>
+                }
+              </select>
+            </div>
+
+            @if (editingEvalId()) {
+              <div class="form-group">
+                <label for="evalStatusSelect">Statut du dossier *</label>
+                <select id="evalStatusSelect" formControlName="status" class="form-control">
+                  <option value="DRAFT">Brouillon</option>
+                  <option value="ASSIGNED">Assignée (Transmise)</option>
+                  <option value="IN_PROGRESS">En cours de saisie</option>
+                  <option value="SUBMITTED">Soumise pour revue</option>
+                  <option value="COMPLETED">Terminée / Validée</option>
+                </select>
+              </div>
+            }
+
+            <!-- Selected Organization Context Preview -->
+            @if (selectedOrgForEval(); as org) {
+              <div class="org-preview-card">
+                <div class="preview-header">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                  <span>Organisation sélectionnée</span>
+                </div>
+                <div class="preview-body">
+                  <span class="preview-name">{{ org.name }}</span>
+                  <span class="preview-sector">Secteur : <strong>{{ org.sectorName || getSectorName(org.sectorId) }}</strong></span>
+                </div>
+              </div>
+            }
+
+            <div class="form-actions-row">
+              <button type="submit" class="btn-primary" [disabled]="evalForm.invalid || evalSaving()">
+                @if (evalSaving()) {
+                  <span class="spinner-sm"></span>
+                  <span>Traitement...</span>
+                } @else {
+                  <span>{{ editingEvalId() ? 'Enregistrer les modifications' : 'Créer l\'évaluation' }}</span>
+                }
+              </button>
+              @if (editingEvalId()) {
+                <button type="button" class="btn-secondary" (click)="cancelEditEvaluation()">Annuler</button>
+              }
+            </div>
+          </form>
+        </div>
+
+        <!-- Section: Submitted Evaluations Received from Organizations (Inbox) -->
+        @if (submittedEvaluations().length > 0) {
+          <div class="content-panel submissions-inbox-panel margin-bottom-lg">
+            <div class="panel-header">
+              <div class="submissions-header-title">
+                <span class="pulse-dot"></span>
+                <div>
+                  <h3>Dossiers reçus des organismes (En attente de validation)</h3>
+                  <p class="panel-sub">Les organismes ont complété et soumis leurs évaluations de conformité PSG.</p>
+                </div>
+              </div>
+              <span class="badge badge-submitted-count">{{ submittedCount() }} dossier(s) reçu(s)</span>
+            </div>
+
+            <div class="submissions-cards-grid">
+              @for (subEval of submittedEvaluations(); track subEval.id) {
+                <div class="submission-inbox-card">
+                  <div class="submission-card-header">
+                    <div class="submission-org-info">
+                      <span class="submission-org-name">{{ subEval.organizationName }}</span>
+                      <span class="badge badge-sector-sm">{{ subEval.sectorName || getSectorName(subEval.sectorId || 0) }}</span>
+                    </div>
+                    <span class="badge status-submitted">#{{ subEval.id }} — Soumise</span>
+                  </div>
+
+                  <div class="submission-card-meta">
+                    <div class="meta-item">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      <span>Reçue le {{ (subEval.submittedAt || subEval.updatedAt) | date:'dd/MM/yyyy à HH:mm' }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      </svg>
+                      <span>93 contrôles renseignés</span>
+                    </div>
+                  </div>
+
+                  <div class="submission-card-actions">
+                    <button 
+                      type="button" 
+                      class="btn-primary btn-sm" 
+                      (click)="viewEvaluationDetail(subEval)"
+                      title="Examiner l'ensemble des réponses et justifications soumises">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                      <span>Examiner les réponses</span>
+                    </button>
+                    <button 
+                      type="button" 
+                      class="btn-action-validate btn-sm" 
+                      (click)="validateEvaluation(subEval)"
+                      title="Valider et clôturer définitivement le dossier">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      <span>Valider</span>
+                    </button>
+                    <button 
+                      type="button" 
+                      class="btn-secondary btn-revision btn-sm" 
+                      (click)="requestRevision(subEval)"
+                      title="Renvoyer à l'organisation pour révision">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="1 4 1 10 7 10"/>
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                      </svg>
+                      <span>Renvoyer</span>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Evaluations Table Panel -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Registre des Évaluations</h3>
+              <p class="panel-sub">Suivi opérationnel des dossiers d'évaluation et réceptions</p>
+            </div>
+            
+            <div class="table-filter-pills">
+              <button 
+                type="button" 
+                class="filter-pill pill-all" 
+                [class.active]="evalFilterStatus() === 'ALL'"
+                (click)="evalFilterStatus.set('ALL')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span class="pill-label">Toutes</span>
+                <span class="pill-count">{{ totalEvaluations() }}</span>
+              </button>
+
+              <button 
+                type="button" 
+                class="filter-pill pill-submitted" 
+                [class.active]="evalFilterStatus() === 'SUBMITTED'"
+                [class.has-pending]="submittedCount() > 0"
+                (click)="evalFilterStatus.set('SUBMITTED')">
+                @if (submittedCount() > 0) {
+                  <span class="pulse-indicator"></span>
+                } @else {
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                }
+                <span class="pill-label">Reçues / Soumises</span>
+                <span class="pill-count">{{ submittedCount() }}</span>
+              </button>
+
+              <button 
+                type="button" 
+                class="filter-pill pill-progress" 
+                [class.active]="evalFilterStatus() === 'IN_PROGRESS'"
+                (click)="evalFilterStatus.set('IN_PROGRESS')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span class="pill-label">En cours</span>
+                <span class="pill-count">{{ inProgressEvaluations() }}</span>
+              </button>
+
+              <button 
+                type="button" 
+                class="filter-pill pill-draft" 
+                [class.active]="evalFilterStatus() === 'DRAFT'"
+                (click)="evalFilterStatus.set('DRAFT')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span class="pill-label">Brouillons</span>
+                <span class="pill-count">{{ draftEvaluationsCount() }}</span>
+              </button>
+
+              <button 
+                type="button" 
+                class="filter-pill pill-completed" 
+                [class.active]="evalFilterStatus() === 'COMPLETED'"
+                (click)="evalFilterStatus.set('COMPLETED')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="pill-label">Validées</span>
+                <span class="pill-count">{{ completedEvaluations() }}</span>
+              </button>
+            </div>
+          </div>
+
+          @if (loadingEvaluations()) {
+            <div class="state-container">
+              <div class="spinner"></div>
+              <span>Chargement du registre...</span>
+            </div>
+          } @else if (filteredEvaluations().length === 0) {
+            <div class="state-container empty">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <p>Aucune évaluation ne correspond à ce filtre.</p>
+              <button type="button" class="btn-secondary" (click)="evalFilterStatus.set('ALL')">Réinitialiser le filtre</button>
+            </div>
+          } @else {
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Réf.</th>
+                    <th>Organisation</th>
+                    <th>Statut</th>
+                    <th>Contrôles</th>
+                    <th>Date création</th>
+                    <th>Dernière MAJ / Soumission</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (evalItem of filteredEvaluations(); track evalItem.id) {
+                    <tr [class.highlight-row-submitted]="evalItem.status === 'SUBMITTED'">
+                      <td class="font-mono">#{{ evalItem.id }}</td>
+                      <td>
+                        <span class="font-medium">{{ evalItem.organizationName }}</span>
+                        <span class="cell-sub block-sub">{{ evalItem.sectorName || getSectorName(evalItem.sectorId || 0) }}</span>
+                      </td>
+                      <td>
+                        <span class="badge" [class]="getEvaluationStatusClass(evalItem.status)">
+                          {{ getEvaluationStatusLabel(evalItem.status) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="cell-sub">{{ evalItem.itemCount }} mesures</span>
+                      </td>
+                      <td>{{ evalItem.createdAt | date:'dd/MM/yyyy' }}</td>
+                      <td>
+                        <div>{{ evalItem.updatedAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                        @if (evalItem.submittedAt) {
+                          <span class="cell-sub block-sub text-success">
+                            Soumis le {{ evalItem.submittedAt | date:'dd/MM/yyyy' }}
+                          </span>
+                        }
+                      </td>
+                      <td class="text-right">
+                        <div class="action-buttons">
+                          <button 
+                            type="button" 
+                            class="btn-icon view-btn" 
+                            (click)="viewEvaluationDetail(evalItem)"
+                            title="Examiner les réponses de l'organisme & inspecter les mesures">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                              <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                          </button>
+
+                          <!-- Action 'Consulter l'analytique' button -->
+                          <button 
+                            type="button" 
+                            class="btn-icon analytics-btn" 
+                            (click)="openAnalyticsForEvaluation(evalItem.id)"
+                            title="Consulter l'analytique et la posture de sécurité">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <line x1="18" y1="20" x2="18" y2="10"/>
+                              <line x1="12" y1="20" x2="12" y2="4"/>
+                              <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                          </button>
+
+                          <!-- Contextual workflow buttons based on status -->
+                          @if (evalItem.status === 'DRAFT') {
+                            <button 
+                              type="button" 
+                              class="btn-action-assign" 
+                              (click)="promptAssignEvaluation(evalItem)"
+                              title="Envoyer / Assigner l'évaluation à l'organisation">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                              </svg>
+                              <span>Envoyer</span>
+                            </button>
+                          } @else if (evalItem.status === 'SUBMITTED') {
+                            <button 
+                              type="button" 
+                              class="btn-action-validate-table" 
+                              (click)="validateEvaluation(evalItem)"
+                              title="Valider définitivement cette évaluation soumise">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                              </svg>
+                              <span>Valider</span>
+                            </button>
+                          }
+
+                          <button type="button" class="btn-icon" (click)="startEditEvaluation(evalItem)" title="Modifier le statut">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                          </button>
+                          <button type="button" class="btn-icon danger" (click)="deleteEvaluation(evalItem)" title="Supprimer">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <polyline points="3 6 5 6 21 6"/>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- SECTION 4: PSG (RÉFÉRENTIEL ET ÉVALUATIONS PAR SECTEUR) -->
+    @if (activeTab() === 'psg') {
+      <div class="tab-content animate-fade">
+        <div class="page-intro">
+          <div>
+            <h1>Politique de Sécurité Gouvernementale (PSG)</h1>
+            <p class="subtitle">Catalogue unifié des 93 mesures ISO/IEC 27002:2022, coefficients sectoriels et suivi des évaluations.</p>
+          </div>
+          <div class="action-bar">
+            @if (psgActiveEvaluation(); as activeEval) {
+              <span class="badge status-progress">
+                Dossier actif : #{{ activeEval.id }} — {{ activeEval.organizationName }}
+              </span>
+            } @else {
+              <span class="badge badge-sector">
+                {{ psgSelectedSector()?.name ? ('Matrice : ' + psgSelectedSector()?.name) : 'Matrice Sectorielle ANCS' }}
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- PSG Sector & Evaluation Selector Panel -->
+        <div class="psg-selectors-card">
+          <div class="psg-selectors-grid">
+            <!-- Sector Selector -->
+            <div class="psg-selector-col">
+              <label for="psgSectorSelect" class="selector-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                  <line x1="9" y1="6" x2="15" y2="6"/>
+                  <line x1="9" y1="10" x2="15" y2="10"/>
+                </svg>
+                <span>1. Choisir le Secteur d'activité</span>
+              </label>
+              <select 
+                id="psgSectorSelect" 
+                class="form-control"
+                [value]="psgSelectedSectorId() || ''"
+                (change)="onPsgSectorChange($any($event.target).value)">
+                <option value="">Tous les secteurs (Vue globale)</option>
+                @for (sector of sectors(); track sector.id) {
+                  <option [value]="sector.id">{{ sector.name }}</option>
+                }
+              </select>
+              <span class="field-hint">
+                Sélectionnez un secteur pour charger sa matrice de coefficients spécifique et filtrer ses évaluations.
+              </span>
+            </div>
+
+            <!-- Evaluation Selector -->
+            <div class="psg-selector-col">
+              <label for="psgEvalSelect" class="selector-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                <span>2. Choisir l'Évaluation en base</span>
+              </label>
+              <select 
+                id="psgEvalSelect" 
+                class="form-control"
+                [value]="psgSelectedEvalId() || ''"
+                (change)="onPsgEvaluationChange($any($event.target).value)">
+                <option value="">— Matrice de référence sectorielle PSG (Coefficients par défaut) —</option>
+                @if (psgAvailableEvaluations().length > 0) {
+                  <optgroup label="Évaluations enregistrées dans la base de données">
+                    @for (evalItem of psgAvailableEvaluations(); track evalItem.id) {
+                      <option [value]="evalItem.id">
+                        #{{ evalItem.id }} — {{ evalItem.organizationName }} ({{ evalItem.sectorName || getSectorName(evalItem.sectorId || 0) }}) [{{ getEvaluationStatusLabel(evalItem.status) }}]
+                      </option>
+                    }
+                  </optgroup>
+                }
+              </select>
+              <span class="field-hint">
+                @if (psgSelectedEvalId()) {
+                  <span>Affiche les 93 mesures avec les réponses réelles, statuts et justifications de cette évaluation.</span>
+                } @else {
+                  <span>Affiche le référentiel normatif des 93 contrôles avec leurs coefficients officiels.</span>
+                }
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Information Context / KPI Cards -->
+        <div class="metrics-grid margin-bottom-lg">
+          @if (psgActiveEvaluation(); as activeEval) {
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Organisme Évalué</span>
+                <div class="metric-icon navy">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" style="font-size: 1.15rem;">{{ activeEval.organizationName }}</span>
+                <span class="metric-sub">Secteur : <strong>{{ activeEval.sectorName || 'Non défini' }}</strong></span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Statut du Dossier</span>
+                <div class="metric-icon blue">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" style="font-size: 1.15rem;">
+                  <span class="badge" [class]="getEvaluationStatusClass(activeEval.status)">
+                    {{ getEvaluationStatusLabel(activeEval.status) }}
+                  </span>
+                </span>
+                <span class="metric-sub">Dossier #{{ activeEval.id }} créé le {{ activeEval.createdAt | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Avancement Saisie</span>
+                <div class="metric-icon amber">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value">
+                  {{ psgComplianceStats()?.progressPercent || 0 }}%
+                </span>
+                <span class="metric-sub">{{ psgComplianceStats()?.answered || 0 }} / 93 contrôles renseignés</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Mesures Conformes</span>
+                <div class="metric-icon emerald">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value">
+                  {{ psgComplianceStats()?.implemented || 0 }}
+                </span>
+                <span class="metric-sub">Mesures mises en œuvre à 100%</span>
+              </div>
+            </div>
+          } @else {
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Secteur Actif</span>
+                <div class="metric-icon navy">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" style="font-size: 1.15rem;">{{ psgSelectedSector()?.name || 'Général (Tous)' }}</span>
+                <span class="metric-sub">Pondérations réglementaires applicables</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Mesures Totales</span>
+                <div class="metric-icon blue">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="m9 12 2 2 4-4"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value">93</span>
+                <span class="metric-sub">Exigences ISO/IEC 27002:2022</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Évaluations Liées</span>
+                <div class="metric-icon amber">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value">{{ psgAvailableEvaluations().length }}</span>
+                <span class="metric-sub">Dossiers répertoriés dans la base</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="card-header">
+                <span class="metric-title">Répartition Thématique</span>
+                <div class="metric-icon emerald">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-body">
+                <span class="metric-value" style="font-size: 1.15rem;">4 Thèmes</span>
+                <span class="metric-sub">37 Org / 8 Pers / 14 Phys / 34 Tech</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="psg-filter-bar">
+          <!-- Theme Tabs Row -->
+          <div class="theme-tabs-row">
+            <button 
+              type="button" 
+              class="theme-pill" 
+              [class.active]="psgSelectedTheme() === 'ALL'"
+              (click)="setPsgTheme('ALL')">
+              <span>Tous les thèmes</span>
+              <span class="count-tag">{{ psgThemeCounts().total }}</span>
+            </button>
+            <button 
+              type="button" 
+              class="theme-pill" 
+              [class.active]="psgSelectedTheme() === 'Organizational'"
+              (click)="setPsgTheme('Organizational')">
+              <span>Organisationnel</span>
+              <span class="count-tag">{{ psgThemeCounts().org }}</span>
+            </button>
+            <button 
+              type="button" 
+              class="theme-pill" 
+              [class.active]="psgSelectedTheme() === 'People'"
+              (click)="setPsgTheme('People')">
+              <span>Personnel</span>
+              <span class="count-tag">{{ psgThemeCounts().people }}</span>
+            </button>
+            <button 
+              type="button" 
+              class="theme-pill" 
+              [class.active]="psgSelectedTheme() === 'Physical'"
+              (click)="setPsgTheme('Physical')">
+              <span>Physique</span>
+              <span class="count-tag">{{ psgThemeCounts().physical }}</span>
+            </button>
+            <button 
+              type="button" 
+              class="theme-pill" 
+              [class.active]="psgSelectedTheme() === 'Technological'"
+              (click)="setPsgTheme('Technological')">
+              <span>Technologique</span>
+              <span class="count-tag">{{ psgThemeCounts().tech }}</span>
+            </button>
+          </div>
+
+          <!-- Controls Filter Row -->
+          <div class="filter-controls-row">
+            <div class="search-control-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input 
+                type="text" 
+                class="search-input" 
+                placeholder="Rechercher par code (A01), contrôle ISO (ISO 5.1), mot-clé..."
+                [value]="psgSearchQuery()"
+                (input)="psgSearchQuery.set($any($event.target).value)"
+              />
+            </div>
+
+            <!-- Coefficient Filter -->
+            <select 
+              class="filter-select"
+              [value]="psgSelectedCoeff() === null ? '' : psgSelectedCoeff()"
+              (change)="setPsgCoeff($any($event.target).value ? +$any($event.target).value : null)">
+              <option value="">Tous les coefficients (1 à 5)</option>
+              <option value="5">Coeff 5 — Critique</option>
+              <option value="4">Coeff 4 — Élevé</option>
+              <option value="3">Coeff 3 — Moyen</option>
+              <option value="2">Coeff 2 — Faible</option>
+              <option value="1">Coeff 1 — Très faible</option>
+            </select>
+
+            <!-- Status Filter (if evaluation is active) -->
+            @if (psgActiveEvaluation()) {
+              <select 
+                class="filter-select"
+                [value]="psgSelectedStatus()"
+                (change)="setPsgStatus($any($event.target).value)">
+                <option value="ALL">Tous les statuts de conformité</option>
+                <option value="IMPLEMENTED">Mis en œuvre (100%)</option>
+                <option value="IN_PROGRESS">En cours (50%)</option>
+                <option value="PLANNED">Planifié (25%)</option>
+                <option value="NOT_PLANNED">Non planifié (0%)</option>
+                <option value="NOT_APPLICABLE">Non applicable</option>
+              </select>
+            }
+
+            <button type="button" class="btn-reset-filters" (click)="resetPsgFilters()" title="Réinitialiser les filtres">
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Content Table Panel -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <div>
+              <h3>
+                @if (psgActiveEvaluation(); as activeEval) {
+                  Mesures de l'Évaluation #{{ activeEval.id }} — {{ activeEval.organizationName }}
+                } @else {
+                  Catalogue des Mesures PSG — {{ psgSelectedSector()?.name || 'Matrice Nationale' }}
+                }
+              </h3>
+              <p class="panel-sub">
+                Affichage de {{ psgDisplayRows().length }} mesure(s) de sécurité
+              </p>
+            </div>
+            <span class="badge badge-neutral">{{ psgDisplayRows().length }} résultats</span>
+          </div>
+
+          @if (loadingPsgActions() || loadingPsgEvaluation()) {
+            <div class="state-container">
+              <div class="spinner"></div>
+              <span>Chargement des données PSG en cours...</span>
+            </div>
+          } @else if (psgDisplayRows().length === 0) {
+            <div class="state-container empty">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <p>Aucune mesure de sécurité ne correspond à vos filtres de recherche.</p>
+              <button type="button" class="btn-secondary" (click)="resetPsgFilters()">Réinitialiser les filtres</button>
+            </div>
+          } @else {
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>ISO 27002</th>
+                    <th>Thème & Sous-domaine</th>
+                    <th>Intitulé de la mesure</th>
+                    <th>Coefficient</th>
+                    @if (psgActiveEvaluation()) {
+                      <th>Statut de conformité</th>
+                      <th>Justification / Commentaire</th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of psgDisplayRows(); track row.code) {
+                    <tr>
+                      <td>
+                        <span class="badge-code">{{ row.code }}</span>
+                      </td>
+                      <td>
+                        <span class="font-mono">{{ row.isoControl }}</span>
+                      </td>
+                      <td>
+                        <span class="badge" [class]="getThemeBadgeClass(row.theme)">
+                          {{ getThemeLabel(row.theme) }}
+                        </span>
+                        <span class="cell-sub block-sub">{{ row.projectSubdomain }}</span>
+                      </td>
+                      <td>
+                        <span class="psg-description-text">{{ row.description }}</span>
+                      </td>
+                      <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                          <span class="coeff-badge" [class]="getCoeffBadgeClass(row.coefficient)">
+                            {{ getCoeffLabel(row.coefficient) }}
+                          </span>
+                          @if (psgActiveEvaluation(); as activeEval) {
+                            @if (activeEval.status !== 'COMPLETED' && row.evaluationItemId) {
+                              <select 
+                                [value]="row.coefficient"
+                                (change)="updatePsgItemCoefficient(activeEval.id, row.evaluationItemId!, +$any($event.target).value)"
+                                class="coeff-inline-select"
+                                title="Modifier le coefficient attribué à cette mesure pour cette évaluation">
+                                <option [value]="1">1</option>
+                                <option [value]="2">2</option>
+                                <option [value]="3">3</option>
+                                <option [value]="4">4</option>
+                                <option [value]="5">5</option>
+                              </select>
+                            }
+                          }
+                        </div>
+                      </td>
+                      @if (psgActiveEvaluation()) {
+                        <td>
+                          <span class="impl-status-badge" [class]="getImplStatusBadgeClass(row.implementationStatus)">
+                            {{ getImplStatusLabel(row.implementationStatus) }}
+                          </span>
+                        </td>
+                        <td>
+                          @if (row.justification || row.comment) {
+                            <div>
+                              @if (row.justification) {
+                                <div class="note-justification">
+                                  <strong>Justification :</strong> {{ row.justification }}
+                                </div>
+                              }
+                              @if (row.comment) {
+                                <div class="note-comment">
+                                  <strong>Note :</strong> {{ row.comment }}
+                                </div>
+                              }
+                            </div>
+                          } @else {
+                            <span class="text-muted italic">—</span>
+                          }
+                        </td>
+                      }
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- SECTION 5: ANALYTIQUE & RÉSULTATS -->
+    @if (activeTab() === 'analytics') {
+      <div class="tab-content animate-fade analytics-view">
+        <!-- Page Intro & Header Actions -->
+        <div class="page-intro">
+          <div>
+            <h1>Analytique & Posture de Sécurité</h1>
+            <p class="subtitle">Diagnostic de maturité PSG / ISO 27001, indicateurs par domaine et cartographie des vulnérabilités.</p>
+          </div>
+          <div class="action-bar">
+            <button 
+              type="button" 
+              class="btn-secondary"
+              [class.active-compare]="analyticsCompareMode()"
+              (click)="toggleAnalyticsCompare()"
+              title="Activer ou désactiver la comparaison entre évaluations">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 3h5v5"/>
+                <path d="M4 20L21 3"/>
+                <path d="M21 16v5h-5"/>
+                <path d="M15 15l6 6"/>
+                <path d="M4 4l5 5"/>
+              </svg>
+              <span>{{ analyticsCompareMode() ? 'Masquer la comparaison' : 'Comparer des évaluations' }}</span>
+            </button>
+
+            <button 
+              type="button" 
+              class="btn-secondary btn-print-report"
+              (click)="printAnalyticsReport()"
+              title="Imprimer ou enregistrer le rapport en PDF">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"/>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+              </svg>
+              <span>Exporter / Imprimer</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Evaluation Explorer Selector Strip -->
+        <div class="analytics-explorer-card">
+          <div class="explorer-grid" [class.compare-active]="analyticsCompareMode()">
+            <!-- Primary Evaluation Selector -->
+            <div class="explorer-col">
+              <label class="explorer-label" for="primaryEvalSelect">
+                <span class="explorer-label-tag">Évaluation active (Réf. A)</span>
+                <span class="explorer-label-sub">Dossier sélectionné pour l'analyse</span>
+              </label>
+              <div class="select-wrapper">
+                <select 
+                  id="primaryEvalSelect" 
+                  class="explorer-select"
+                  [value]="analyticsSelectedEvalId()" 
+                  (change)="onAnalyticsEvalChange($any($event.target).value)">
+                  @for (ev of evaluations(); track ev.id) {
+                    <option [value]="ev.id">
+                      #{{ ev.id }} — {{ ev.organizationName }} ({{ ev.sectorName || getSectorName(ev.sectorId || 0) }}) — [{{ getEvaluationStatusLabel(ev.status) }}]
+                    </option>
+                  }
+                </select>
+              </div>
+
+              @if (selectedAnalyticsEval(); as activeEv) {
+                <div class="eval-metadata-strip">
+                  <span class="meta-item">
+                    <span class="meta-name">Organisation :</span>
+                    <strong>{{ activeEv.organizationName }}</strong>
+                  </span>
+                  <span class="meta-divider">•</span>
+                  <span class="meta-item">
+                    <span class="meta-name">Secteur :</span>
+                    <strong>{{ activeEv.sectorName || getSectorName(activeEv.sectorId || 0) }}</strong>
+                  </span>
+                  <span class="meta-divider">•</span>
+                  <span class="meta-item">
+                    <span class="meta-name">Statut :</span>
+                    <span class="badge" [class]="getEvaluationStatusClass(activeEv.status)">
+                      {{ getEvaluationStatusLabel(activeEv.status) }}
+                    </span>
+                  </span>
+                  @if (activeEv.submittedAt) {
+                    <span class="meta-divider">•</span>
+                    <span class="meta-item">
+                      <span class="meta-name">Soumis le :</span>
+                      <span>{{ activeEv.submittedAt | date:'dd/MM/yyyy' }}</span>
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Compare Evaluation Selector (if compare mode enabled) -->
+            @if (analyticsCompareMode()) {
+              <div class="explorer-col compare-col animate-fade">
+                <label class="explorer-label" for="compareEvalSelect">
+                  <span class="explorer-label-tag compare-tag">Évaluation comparée (Réf. B)</span>
+                  <span class="explorer-label-sub">Repère de comparaison sectorielle ou temporelle</span>
+                </label>
+                <div class="select-wrapper">
+                  <select 
+                    id="compareEvalSelect" 
+                    class="explorer-select compare-select"
+                    [value]="analyticsCompareEvalId()" 
+                    (change)="onAnalyticsCompareEvalChange($any($event.target).value)">
+                    @for (ev of evaluations(); track ev.id) {
+                      @if (ev.id !== analyticsSelectedEvalId()) {
+                        <option [value]="ev.id">
+                          #{{ ev.id }} — {{ ev.organizationName }} ({{ ev.sectorName || getSectorName(ev.sectorId || 0) }}) — [{{ getEvaluationStatusLabel(ev.status) }}]
+                        </option>
+                      }
+                    }
+                  </select>
+                </div>
+
+                @if (selectedCompareEval(); as compEv) {
+                  <div class="eval-metadata-strip">
+                    <span class="meta-item">
+                      <span class="meta-name">Organisation B :</span>
+                      <strong>{{ compEv.organizationName }}</strong>
+                    </span>
+                    <span class="meta-divider">•</span>
+                    <span class="meta-item">
+                      <span class="meta-name">Secteur :</span>
+                      <strong>{{ compEv.sectorName || getSectorName(compEv.sectorId || 0) }}</strong>
+                    </span>
+                    <span class="meta-divider">•</span>
+                    <span class="meta-item">
+                      <span class="meta-name">Statut :</span>
+                      <span class="badge" [class]="getEvaluationStatusClass(compEv.status)">
+                        {{ getEvaluationStatusLabel(compEv.status) }}
+                      </span>
+                    </span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Comparison Delta Banner -->
+          @if (analyticsCompareMode() && analyticsScoreData() && analyticsCompareScoreData()) {
+            <div class="compare-delta-banner animate-fade">
+              <div class="compare-summary-item">
+                <span class="compare-metric-title">Écart global (Score B vs Score A)</span>
+                @if (analyticsOverallDelta(); as delta) {
+                  <div class="delta-badge" [class.delta-positive]="delta > 0" [class.delta-negative]="delta < 0" [class.delta-equal]="delta === 0">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      @if (delta > 0) {
+                        <polyline points="18 15 12 9 6 15"/>
+                      } @else if (delta < 0) {
+                        <polyline points="6 9 12 15 18 9"/>
+                      } @else {
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      }
+                    </svg>
+                    <span>{{ delta > 0 ? '+' : '' }}{{ delta }}%</span>
+                  </div>
+                } @else {
+                  <span class="badge badge-neutral">Indéterminé</span>
+                }
+              </div>
+
+              <div class="compare-scores-row">
+                <div class="compare-score-box">
+                  <span class="box-tag">Évaluation A</span>
+                  <span class="box-val">{{ analyticsScoreData()?.overallScore !== null ? analyticsScoreData()?.overallScore : 0 }}%</span>
+                  <span class="box-sub">{{ analyticsScoreData()?.organizationName }}</span>
+                </div>
+                <div class="compare-vs-divider">VS</div>
+                <div class="compare-score-box highlight">
+                  <span class="box-tag">Évaluation B</span>
+                  <span class="box-val">{{ analyticsCompareScoreData()?.overallScore !== null ? analyticsCompareScoreData()?.overallScore : 0 }}%</span>
+                  <span class="box-sub">{{ analyticsCompareScoreData()?.organizationName }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Loading State -->
+        @if (analyticsLoading()) {
+          <div class="state-container">
+            <div class="spinner"></div>
+            <span>Calcul déterministe des scores et agrégations sectorielles...</span>
+          </div>
+        } @else if (analyticsError(); as err) {
+          <div class="alert alert-danger">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div>
+              <strong>Erreur d'analyse :</strong>
+              <div>{{ err }}</div>
+            </div>
+          </div>
+        } @else if (analyticsScoreData(); as score) {
+
+          <!-- FEATURE 1 & FEATURE 3: Overall Score Gauge Card & Priority Distribution Card -->
+          <div class="analytics-top-grid">
+            
+            <!-- Overall Score & Maturity Level -->
+            <div class="content-panel overall-score-card">
+              <div class="panel-header">
+                <div>
+                  <h3>Score Global & Maturité</h3>
+                  <p class="panel-sub">Indice de conformité pondéré selon le secteur {{ score.sectorName }}</p>
+                </div>
+                <span class="score-band-pill" [class]="getScoreBandClass(score.overallLevel)">
+                  {{ score.overallLevel || 'Non évalué' }}
+                </span>
+              </div>
+
+              <div class="score-gauge-body">
+                <div class="gauge-visual-wrap">
+                  <!-- Clean SVG Radial Gauge Meter -->
+                  <svg class="gauge-svg" viewBox="0 0 200 125" preserveAspectRatio="xMidYMid meet">
+                    <!-- Gauge background track -->
+                    <path 
+                      class="gauge-bg" 
+                      d="M 25 100 A 75 75 0 0 1 175 100" 
+                      fill="none" 
+                      stroke="#e2e8f0" 
+                      stroke-width="14" 
+                      stroke-linecap="round"
+                    />
+                    <!-- Gauge progress fill -->
+                    <path 
+                      class="gauge-progress" 
+                      [class]="getScoreBandClass(score.overallLevel)"
+                      d="M 25 100 A 75 75 0 0 1 175 100" 
+                      fill="none" 
+                      stroke-width="14" 
+                      stroke-linecap="round"
+                      stroke-dasharray="235.62"
+                      [style.strokeDashoffset]="getScoreGaugeOffset(score.overallScore)"
+                    />
+                  </svg>
+
+                  <div class="gauge-center-text">
+                    <span class="gauge-number">{{ score.overallScore !== null ? score.overallScore : 0 }}<span class="gauge-unit">%</span></span>
+                    <span class="gauge-caption">Niveau de sécurité PSG</span>
+                  </div>
+                </div>
+
+                <div class="gauge-summary-metrics">
+                  <div class="g-metric-row">
+                    <span class="g-metric-label">Mesures applicables :</span>
+                    <span class="g-metric-val"><strong>{{ score.applicableActionCount }}</strong> / 93</span>
+                  </div>
+                  <div class="g-metric-row">
+                    <span class="g-metric-label">Mesures non applicables (N/A) :</span>
+                    <span class="g-metric-val"><strong>{{ score.notApplicableActionCount }}</strong></span>
+                  </div>
+                  <div class="g-metric-row">
+                    <span class="g-metric-label">Échelle d'appréciation :</span>
+                    <span class="g-metric-val text-muted">
+                      @if ((score.overallScore || 0) >= 80) { Très bon (≥80%) }
+                      @else if ((score.overallScore || 0) >= 60) { Bon [60-80%] }
+                      @else if ((score.overallScore || 0) >= 40) { À améliorer [40-60%] }
+                      @else if ((score.overallScore || 0) >= 20) { Faible [20-40%] }
+                      @else { Critique (&lt;20%) }
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Priority & Risk Distribution (Feature 3) -->
+            <div class="content-panel priority-distrib-card">
+              <div class="panel-header">
+                <div>
+                  <h3>Distribution des Priorités de Remédiation</h3>
+                  <p class="panel-sub">Classification des actions selon leur coefficient et état d'avancement</p>
+                </div>
+                <span class="distrib-total-chip">{{ analyticsPriorityDistribution().total }} actions évaluées</span>
+              </div>
+
+              <!-- Segmented Horizontal Proportional Bar -->
+              @if (analyticsPriorityDistribution(); as pDist) {
+                <div class="distrib-bar-container">
+                  <div class="distrib-stacked-bar">
+                    @if (pDist.critiquePct > 0) {
+                      <div class="distrib-seg seg-critical" [style.width.%]="pDist.critiquePct" [title]="'Critique: ' + pDist.critique + ' (' + pDist.critiquePct + '%)'"></div>
+                    }
+                    @if (pDist.eleveePct > 0) {
+                      <div class="distrib-seg seg-high" [style.width.%]="pDist.eleveePct" [title]="'Élevée: ' + pDist.elevee + ' (' + pDist.eleveePct + '%)'"></div>
+                    }
+                    @if (pDist.moyennePct > 0) {
+                      <div class="distrib-seg seg-medium" [style.width.%]="pDist.moyennePct" [title]="'Moyenne: ' + pDist.moyenne + ' (' + pDist.moyennePct + '%)'"></div>
+                    }
+                    @if (pDist.faiblePct > 0) {
+                      <div class="distrib-seg seg-low" [style.width.%]="pDist.faiblePct" [title]="'Faible: ' + pDist.faible + ' (' + pDist.faiblePct + '%)'"></div>
+                    }
+                    @if (pDist.aucunPct > 0) {
+                      <div class="distrib-seg seg-none" [style.width.%]="pDist.aucunPct" [title]="'Aucun / Conforme: ' + pDist.aucun + ' (' + pDist.aucunPct + '%)'"></div>
+                    }
+                  </div>
+                </div>
+
+                <!-- 5 Priority Metric Cards (Clickable filters for Weaknesses table below) -->
+                <div class="priority-cards-grid">
+                  <div 
+                    class="priority-stat-box box-critical" 
+                    [class.active-filter]="analyticsWeaknessPriorityFilter() === 'Critique'"
+                    (click)="analyticsWeaknessPriorityFilter.set(analyticsWeaknessPriorityFilter() === 'Critique' ? 'ALL' : 'Critique')"
+                    title="Cliquer pour filtrer les faiblesses critiques">
+                    <div class="pbox-header">
+                      <span class="pbox-dot dot-critical"></span>
+                      <span class="pbox-title">Critique</span>
+                    </div>
+                    <div class="pbox-number">{{ pDist.critique }}</div>
+                    <div class="pbox-pct">{{ pDist.critiquePct }}% des mesures</div>
+                  </div>
+
+                  <div 
+                    class="priority-stat-box box-high" 
+                    [class.active-filter]="analyticsWeaknessPriorityFilter() === 'Élevée'"
+                    (click)="analyticsWeaknessPriorityFilter.set(analyticsWeaknessPriorityFilter() === 'Élevée' ? 'ALL' : 'Élevée')"
+                    title="Cliquer pour filtrer les faiblesses élevées">
+                    <div class="pbox-header">
+                      <span class="pbox-dot dot-high"></span>
+                      <span class="pbox-title">Élevée</span>
+                    </div>
+                    <div class="pbox-number">{{ pDist.elevee }}</div>
+                    <div class="pbox-pct">{{ pDist.eleveePct }}% des mesures</div>
+                  </div>
+
+                  <div 
+                    class="priority-stat-box box-medium" 
+                    [class.active-filter]="analyticsWeaknessPriorityFilter() === 'Moyenne'"
+                    (click)="analyticsWeaknessPriorityFilter.set(analyticsWeaknessPriorityFilter() === 'Moyenne' ? 'ALL' : 'Moyenne')"
+                    title="Cliquer pour filtrer les faiblesses moyennes">
+                    <div class="pbox-header">
+                      <span class="pbox-dot dot-medium"></span>
+                      <span class="pbox-title">Moyenne</span>
+                    </div>
+                    <div class="pbox-number">{{ pDist.moyenne }}</div>
+                    <div class="pbox-pct">{{ pDist.moyennePct }}% des mesures</div>
+                  </div>
+
+                  <div 
+                    class="priority-stat-box box-low" 
+                    [class.active-filter]="analyticsWeaknessPriorityFilter() === 'Faible'"
+                    (click)="analyticsWeaknessPriorityFilter.set(analyticsWeaknessPriorityFilter() === 'Faible' ? 'ALL' : 'Faible')"
+                    title="Cliquer pour filtrer les faiblesses faibles">
+                    <div class="pbox-header">
+                      <span class="pbox-dot dot-low"></span>
+                      <span class="pbox-title">Faible</span>
+                    </div>
+                    <div class="pbox-number">{{ pDist.faible }}</div>
+                    <div class="pbox-pct">{{ pDist.faiblePct }}% des mesures</div>
+                  </div>
+
+                  <div 
+                    class="priority-stat-box box-none" 
+                    [class.active-filter]="analyticsWeaknessPriorityFilter() === 'Aucun'"
+                    (click)="analyticsWeaknessPriorityFilter.set(analyticsWeaknessPriorityFilter() === 'Aucun' ? 'ALL' : 'Aucun')"
+                    title="Cliquer pour filtrer les actions conformes">
+                    <div class="pbox-header">
+                      <span class="pbox-dot dot-none"></span>
+                      <span class="pbox-title">Aucun</span>
+                    </div>
+                    <div class="pbox-number">{{ pDist.aucun }}</div>
+                    <div class="pbox-pct">{{ pDist.aucunPct }}% conformes</div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- FEATURE 2: Security Domain Results (4 domaines PSG) -->
+          <div class="content-panel margin-top-lg">
+            <div class="panel-header">
+              <div>
+                <h3>Résultats par Domaine de Sécurité PSG</h3>
+                <p class="panel-sub">Ventilation sur les 4 piliers fondamentaux (ISO/IEC 27002:2022)</p>
+              </div>
+            </div>
+
+            <!-- 4 Domain Cards Grid -->
+            <div class="domain-cards-grid">
+              @for (domain of analyticsDomainCards(); track domain.key) {
+                <div class="domain-card">
+                  <div class="domain-card-header">
+                    <div class="domain-icon-box" [class]="'icon-' + domain.key.toLowerCase()">
+                      @if (domain.icon === 'shield') {
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                      } @else if (domain.icon === 'users') {
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                          <circle cx="9" cy="7" r="4"/>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                      } @else if (domain.icon === 'lock') {
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                      } @else {
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="4" y="4" width="16" height="16" rx="2"/>
+                          <rect x="9" y="9" width="6" height="6"/>
+                          <line x1="9" y1="1" x2="9" y2="4"/>
+                          <line x1="15" y1="1" x2="15" y2="4"/>
+                          <line x1="9" y1="20" x2="9" y2="23"/>
+                          <line x1="15" y1="20" x2="15" y2="23"/>
+                          <line x1="20" y1="9" x2="23" y2="9"/>
+                          <line x1="20" y1="14" x2="23" y2="14"/>
+                          <line x1="1" y1="9" x2="4" y2="9"/>
+                          <line x1="1" y1="14" x2="4" y2="14"/>
+                        </svg>
+                      }
+                    </div>
+                    <div class="domain-title-wrap">
+                      <h4 class="domain-name">{{ domain.name }}</h4>
+                      <span class="domain-sub">{{ domain.subtitle }}</span>
+                    </div>
+                  </div>
+
+                  <div class="domain-score-row">
+                    <div class="domain-score-number">
+                      {{ domain.scoreFormatted }}
+                    </div>
+                    <span class="domain-level-badge" [class]="getScoreBandClass(domain.level)">
+                      {{ domain.level }}
+                    </span>
+                  </div>
+
+                  <!-- Visual Progress Track with Guidelines -->
+                  <div class="domain-progress-track">
+                    <div 
+                      class="domain-progress-fill" 
+                      [class]="getScoreBandClass(domain.level)"
+                      [style.width.%]="domain.scorePercent">
+                    </div>
+                    <span class="benchmark-line line-50" title="Seuil médian 50%"></span>
+                    <span class="benchmark-line line-80" title="Objectif d'excellence 80%"></span>
+                  </div>
+
+                  <div class="domain-footer-meta">
+                    <span class="domain-count"><strong>{{ domain.count }}</strong> mesures applicables</span>
+                    <span class="domain-benchmark-hint">Objectif : 80%</span>
+                  </div>
+
+                  <!-- If compare mode is active: show domain comparison delta -->
+                  @if (analyticsCompareMode() && analyticsCompareDomainCards(); as compDomains) {
+                    @for (cd of compDomains; track cd.key) {
+                      @if (cd.key === domain.key) {
+                        <div class="domain-compare-bar animate-fade">
+                          <span class="comp-label">Éval. B : <strong>{{ cd.scoreFormatted }}</strong></span>
+                          @if (domain.score !== null && cd.score !== null) {
+                            <span class="comp-diff" [class.diff-pos]="cd.score > domain.score" [class.diff-neg]="cd.score < domain.score">
+                              {{ cd.score >= domain.score ? '+' : '' }}{{ (cd.score - domain.score) | number:'1.1-2' }}%
+                            </span>
+                          }
+                        </div>
+                      }
+                    }
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Multi-Domain Comparative Benchmark Bar Chart -->
+            <div class="domain-benchmark-visual-box">
+              <div class="benchmark-title-bar">
+                <span class="benchmark-title">Vue comparative multidomaine & Écarts de maturité</span>
+                <div class="benchmark-legend">
+                  <span class="leg-item"><span class="leg-swatch bar-org"></span> Organisationnel</span>
+                  <span class="leg-item"><span class="leg-swatch bar-people"></span> RH</span>
+                  <span class="leg-item"><span class="leg-swatch bar-physical"></span> Physique</span>
+                  <span class="leg-item"><span class="leg-swatch bar-tech"></span> Technologique</span>
+                </div>
+              </div>
+
+              <div class="benchmark-bars-chart">
+                @for (domain of analyticsDomainCards(); track domain.key) {
+                  <div class="chart-row">
+                    <div class="chart-label">{{ domain.name }}</div>
+                    <div class="chart-track">
+                      <div 
+                        class="chart-bar" 
+                        [class]="'bar-' + domain.key.toLowerCase()" 
+                        [style.width.%]="domain.scorePercent">
+                        <span class="bar-val-inside">{{ domain.scoreFormatted }}</span>
+                      </div>
+                      <div class="guideline guide-50"></div>
+                      <div class="guideline guide-80"></div>
+                    </div>
+                  </div>
+                }
+                <div class="chart-axis-row">
+                  <div class="axis-spacer"></div>
+                  <div class="axis-ticks">
+                    <span>0%</span>
+                    <span>25%</span>
+                    <span class="axis-target">50% (Moyen)</span>
+                    <span>75%</span>
+                    <span class="axis-target excellence">80% (Cible)</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEATURE 4: Top Weaknesses & Priority Actions -->
+          <div class="content-panel margin-top-lg">
+            <div class="panel-header flex-between">
+              <div>
+                <h3>Top Faiblesses & Actions Prioritaires</h3>
+                <p class="panel-sub">Mesures les plus critiques pour la sécurité de l'organisme, classées par indice de priorité</p>
+              </div>
+
+              <div class="filter-count-chip">
+                {{ analyticsFilteredWeaknesses().length }} mesures affichées
+              </div>
+            </div>
+
+            <!-- Weakness Filters Toolbar -->
+            <div class="analytics-toolbar">
+              <div class="toolbar-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input 
+                  type="text" 
+                  class="toolbar-input" 
+                  placeholder="Rechercher par code (A04), contrôle ISO (ISO 5.4), mot-clé..."
+                  [value]="analyticsWeaknessSearch()"
+                  (input)="analyticsWeaknessSearch.set($any($event.target).value)"
+                />
+              </div>
+
+              <div class="toolbar-select-group">
+                <label for="weaknessPrioritySelect">Priorité :</label>
+                <select 
+                  id="weaknessPrioritySelect" 
+                  class="toolbar-select"
+                  [value]="analyticsWeaknessPriorityFilter()"
+                  (change)="analyticsWeaknessPriorityFilter.set($any($event.target).value)">
+                  <option value="ALL">Toutes les priorités</option>
+                  <option value="Critique">Critique</option>
+                  <option value="Élevée">Élevée</option>
+                  <option value="Moyenne">Moyenne</option>
+                  <option value="Faible">Faible</option>
+                  <option value="Aucun">Aucun / Conforme</option>
+                </select>
+              </div>
+
+              <div class="toolbar-select-group">
+                <label for="weaknessStatusSelect">Mise en œuvre :</label>
+                <select 
+                  id="weaknessStatusSelect" 
+                  class="toolbar-select"
+                  [value]="analyticsWeaknessStatusFilter()"
+                  (change)="analyticsWeaknessStatusFilter.set($any($event.target).value)">
+                  <option value="ALL">Tous les statuts</option>
+                  <option value="NOT_PLANNED">Non planifié (0%)</option>
+                  <option value="PLANNED">Planifié (25%)</option>
+                  <option value="IN_PROGRESS">En cours (50%)</option>
+                  <option value="IMPLEMENTED">Mis en œuvre (100%)</option>
+                </select>
+              </div>
+
+              <div class="toolbar-select-group">
+                <label for="weaknessSortSelect">Tri :</label>
+                <select 
+                  id="weaknessSortSelect" 
+                  class="toolbar-select"
+                  [value]="analyticsWeaknessSortBy()"
+                  (change)="analyticsWeaknessSortBy.set($any($event.target).value)">
+                  <option value="priority-desc">Priorité décroissante (vulnérabilités max)</option>
+                  <option value="priority-asc">Priorité croissante</option>
+                  <option value="coeff-desc">Coefficient décroissant (5 à 1)</option>
+                  <option value="code-asc">Code mesure (A01, A02...)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Weaknesses Data Table -->
+            @if (analyticsFilteredWeaknesses().length === 0) {
+              <div class="state-container empty">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <p>Aucune action ne correspond aux critères de filtre sélectionnés.</p>
+                <button 
+                  type="button" 
+                  class="btn-secondary" 
+                  (click)="analyticsWeaknessPriorityFilter.set('ALL'); analyticsWeaknessStatusFilter.set('ALL'); analyticsWeaknessSearch.set('')">
+                  Réinitialiser les filtres
+                </button>
+              </div>
+            } @else {
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 80px;">Code</th>
+                      <th style="width: 110px;">Contrôle ISO</th>
+                      <th>Description de la mesure de sécurité</th>
+                      <th style="width: 100px;">Coefficient</th>
+                      <th style="width: 170px;">Statut de mise en œuvre</th>
+                      <th style="width: 100px;">Priorité</th>
+                      <th style="width: 120px;" class="text-right">Niveau</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (action of analyticsFilteredWeaknesses(); track action.actionCode) {
+                      <tr [class.highlight-row-critical]="action.priorityLevel === 'Critique'">
+                        <td>
+                          <span class="code-badge font-mono">{{ action.actionCode }}</span>
+                        </td>
+                        <td>
+                          <span class="iso-chip font-mono">{{ getActionIsoControl(action) }}</span>
+                        </td>
+                        <td>
+                          <div class="action-desc-cell">
+                            {{ action.actionDescription }}
+                          </div>
+                        </td>
+                        <td>
+                          <span class="coeff-badge" [class]="'coeff-' + action.coefficient" title="Pondération sectorielle">
+                            Coeff. {{ action.coefficient }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="impl-status-badge" [class]="getImplStatusBadgeClass(action.implementationStatus)">
+                            {{ getImplStatusLabel(action.implementationStatus) }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="weakness-score-val font-mono">
+                            {{ action.weaknessPriority !== null ? (action.weaknessPriority | number:'1.2-2') : '—' }}
+                          </span>
+                        </td>
+                        <td class="text-right">
+                          <span class="priority-badge" [class]="getPriorityBadgeClass(action.priorityLevel)">
+                            {{ action.priorityLevel || 'Non défini' }}
+                          </span>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+
+          <!-- FEATURE 5: Subdomain / Theme Analysis -->
+          <div class="content-panel margin-top-lg">
+            <div class="panel-header flex-between">
+              <div>
+                <h3>Analyse Détaillée par Sous-Domaine</h3>
+                <p class="panel-sub">Performance ventilée selon les sous-domaines du référentiel PSG</p>
+              </div>
+              <div class="filter-count-chip">
+                {{ analyticsFilteredSubdomains().length }} sous-domaines
+              </div>
+            </div>
+
+            <!-- Subdomain Filter Pills & Search -->
+            <div class="analytics-subdomain-toolbar">
+              <div class="subdomain-theme-pills">
+                <button 
+                  type="button" 
+                  class="filter-pill" 
+                  [class.active]="analyticsSubdomainThemeFilter() === 'ALL'"
+                  (click)="analyticsSubdomainThemeFilter.set('ALL')">
+                  Tous les thèmes
+                </button>
+                <button 
+                  type="button" 
+                  class="filter-pill pill-org" 
+                  [class.active]="analyticsSubdomainThemeFilter() === 'Organizational'"
+                  (click)="analyticsSubdomainThemeFilter.set('Organizational')">
+                  Organisationnel
+                </button>
+                <button 
+                  type="button" 
+                  class="filter-pill pill-people" 
+                  [class.active]="analyticsSubdomainThemeFilter() === 'People'"
+                  (click)="analyticsSubdomainThemeFilter.set('People')">
+                  Ressources Humaines
+                </button>
+                <button 
+                  type="button" 
+                  class="filter-pill pill-physical" 
+                  [class.active]="analyticsSubdomainThemeFilter() === 'Physical'"
+                  (click)="analyticsSubdomainThemeFilter.set('Physical')">
+                  Physique
+                </button>
+                <button 
+                  type="button" 
+                  class="filter-pill pill-tech" 
+                  [class.active]="analyticsSubdomainThemeFilter() === 'Technological'"
+                  (click)="analyticsSubdomainThemeFilter.set('Technological')">
+                  Technologique
+                </button>
+              </div>
+
+              <div class="subdomain-search-wrap">
+                <input 
+                  type="text" 
+                  class="toolbar-input" 
+                  placeholder="Rechercher un sous-domaine..."
+                  [value]="analyticsSubdomainSearch()"
+                  (input)="analyticsSubdomainSearch.set($any($event.target).value)"
+                />
+                <select 
+                  class="toolbar-select" 
+                  [value]="analyticsSubdomainSortBy()"
+                  (change)="analyticsSubdomainSortBy.set($any($event.target).value)">
+                  <option value="score-asc">Score croissant (faiblesses d'abord)</option>
+                  <option value="score-desc">Score décroissant</option>
+                  <option value="name-asc">Nom alphabétique</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Subdomains Table -->
+            @if (analyticsFilteredSubdomains().length === 0) {
+              <div class="state-container empty">
+                <p>Aucun sous-domaine ne correspond au filtre sélectionné.</p>
+              </div>
+            } @else {
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Sous-Domaine</th>
+                      <th style="width: 170px;">Domaine parent</th>
+                      <th style="width: 130px;">Mesures applicables</th>
+                      <th style="width: 240px;">Indice de conformité</th>
+                      <th style="width: 110px;">Score</th>
+                      <th style="width: 140px;" class="text-right">Niveau</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (sub of analyticsFilteredSubdomains(); track sub.subdomain) {
+                      <tr>
+                        <td>
+                          <span class="subdomain-name font-medium">{{ sub.subdomain }}</span>
+                        </td>
+                        <td>
+                          <span class="theme-badge" [class]="getThemeBadgeClass(sub.theme)">
+                            {{ getThemeLabel(sub.theme) }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="cell-sub">{{ sub.applicableActionCount }} mesures</span>
+                        </td>
+                        <td>
+                          <div class="sub-progress-wrap">
+                            <div class="sub-progress-track">
+                              <div 
+                                class="sub-progress-fill" 
+                                [class]="getScoreBandClass(sub.level)"
+                                [style.width.%]="sub.score !== null ? sub.score : 0">
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="sub-score-pct font-mono">
+                            {{ sub.score !== null ? (sub.score | number:'1.1-2') + '%' : 'N/A' }}
+                          </span>
+                        </td>
+                        <td class="text-right">
+                          <span class="domain-level-badge" [class]="getScoreBandClass(sub.level)">
+                            {{ sub.level }}
+                          </span>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+
+        }
+      </div>
+    }
+
+  </main>
+</div>
+
+<!-- Modal: Edit / Configure Organization Access Credentials (Username & Password) -->
+@if (selectedOrgAccount(); as orgAcc) {
+  <div class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon-wrapper">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Identifiants d'accès — {{ orgAcc.name }}</h3>
+          <p class="modal-subtitle">Configurez le nom d'utilisateur et le mot de passe de l'organisation</p>
+        </div>
+      </div>
+
+      @if (accountError(); as error) {
+        <div class="alert alert-danger">
+          <span>{{ error }}</span>
+        </div>
+      }
+
+      <form [formGroup]="accountForm" (ngSubmit)="saveAccount()" class="form-stacked">
+        <div class="form-group">
+          <label for="accUsername">Nom d'utilisateur *</label>
+          <input 
+            id="accUsername" 
+            type="text" 
+            formControlName="username" 
+            placeholder="Ex: orange_user" 
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="accPassword">
+            Mot de passe
+            @if (getFirmUserForOrg(orgAcc.id)) {
+              <span class="hint-text">(laisser vide pour ne pas modifier)</span>
+            } @else {
+              <span class="required-star">*</span>
+            }
+          </label>
+          <input 
+            id="accPassword" 
+            type="password" 
+            formControlName="password" 
+            placeholder="Nouveau mot de passe" 
+            class="form-control"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <div class="modal-footer margin-top-lg">
+          <button type="button" class="btn-secondary" (click)="closeAccountModal()" [disabled]="accountSaving()">
+            Annuler
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="accountForm.invalid || accountSaving()">
+            @if (accountSaving()) {
+              <span class="spinner-sm"></span>
+              <span>Enregistrement...</span>
+            } @else {
+              <span>Enregistrer les identifiants</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Modal: Confirmation for 'Envoyer / Assigner l'évaluation' -->
+@if (assignConfirmEval(); as evalToAssign) {
+  <div class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon-wrapper">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Transmission de l'évaluation</h3>
+          <p class="modal-subtitle">Confirmez l'envoi de l'évaluation à l'organisation</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <p>Vous allez assigner et transmettre l'évaluation <strong>#{{ evalToAssign.id }}</strong> à l'organisation <strong>« {{ evalToAssign.organizationName }} »</strong>.</p>
+        <p class="modal-note">Cette action rendra l'évaluation accessible au compte de cette organisation pour complétion.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="cancelAssignEvaluation()" [disabled]="assigningEval()">
+          Annuler
+        </button>
+        <button type="button" class="btn-primary" (click)="confirmAssignEvaluation()" [disabled]="assigningEval()">
+          @if (assigningEval()) {
+            <span class="spinner-sm"></span>
+            <span>Transmission...</span>
+          } @else {
+            <span>Confirmer et Envoyer</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Modal: Inspection & Customization of 93 Actions and Coefficients -->
+@if (detailedEvaluation(); as activeEval) {
+  <div class="modal-backdrop" (click)="closeEvaluationDetail()">
+    <div class="modal-card modal-lg" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-icon-wrapper">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="modal-header-text">
+          <h3>Évaluation #{{ activeEval.id }} — {{ activeEval.organizationName }}</h3>
+          <p class="modal-subtitle">
+            Secteur : <strong>{{ activeEval.sectorName || 'Non défini' }}</strong> | Statut : 
+            <span class="badge" [class]="getEvaluationStatusClass(activeEval.status)">{{ getEvaluationStatusLabel(activeEval.status) }}</span>
+            <span class="badge badge-neutral" style="margin-left: 8px;">{{ activeEval.items?.length || 0 }} mesures au total</span>
+          </p>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="closeEvaluationDetail()" title="Fermer la fenêtre">
+          &times;
+        </button>
+      </div>
+
+      <div class="eval-modal-info-box">
+        <div class="info-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+        </div>
+        <div class="info-content">
+          <p>
+            <strong>Référentiel des 93 mesures (ISO/IEC 27002:2022).</strong>
+            Les valeurs de la matrice sont attribuées selon le secteur de l'organisation 
+            (<strong>{{ activeEval.sectorName || 'Général' }}</strong>) par défaut.
+            En tant qu'administrateur, vous avez la possibilité de <strong>modifier uniquement le coefficient</strong> de pondération (1 à 5).
+          </p>
+        </div>
+      </div>
+
+      <!-- Compliance and Score summary banner if submitted or scored -->
+      @if (evalModalComplianceStats(); as cStats) {
+        <div class="eval-modal-score-banner">
+          <div class="score-banner-left">
+            <div class="score-banner-title">
+              <span class="status-badge-lg" [class]="getEvaluationStatusClass(activeEval.status)">
+                {{ getEvaluationStatusLabel(activeEval.status) }}
+              </span>
+              @if (activeEval.submittedAt) {
+                <span class="submitted-date-chip">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  Reçu le {{ activeEval.submittedAt | date:'dd/MM/yyyy à HH:mm' }}
+                </span>
+              }
+            </div>
+            <div class="score-banner-stats">
+              <span class="cstat-item cstat-impl"><strong>{{ cStats.implemented }}</strong> mis en œuvre</span>
+              <span class="cstat-item cstat-prog"><strong>{{ cStats.inProgress }}</strong> en cours</span>
+              <span class="cstat-item cstat-plan"><strong>{{ cStats.planned }}</strong> planifiés</span>
+              <span class="cstat-item cstat-not"><strong>{{ cStats.notPlanned }}</strong> non planifiés</span>
+              <span class="cstat-item cstat-na"><strong>{{ cStats.notApplicable }}</strong> N/A</span>
+            </div>
+          </div>
+
+          <div class="score-banner-right">
+            @if (loadingScore()) {
+              <div class="score-loader">
+                <span class="spinner-sm"></span>
+                <span>Calcul du score...</span>
+              </div>
+            } @else if (activeEvalScore(); as sc) {
+              <div class="score-display-card">
+                <div class="score-main-value">{{ sc.overallScore !== null ? sc.overallScore : 0 }}%</div>
+                <div class="score-details">
+                  <span class="score-level-badge">{{ sc.overallLevel || 'Conformité' }}</span>
+                  <span class="score-points">{{ sc.applicableActionCount }} mesures applicables</span>
+                </div>
+                <button 
+                  type="button" 
+                  class="btn-view-analytics-sm" 
+                  (click)="openAnalyticsForEvaluation(activeEval.id)"
+                  title="Ouvrir l'analyse détaillée de cette évaluation">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                  </svg>
+                  <span>Analytique</span>
+                </button>
+              </div>
+            } @else {
+              <div class="progress-pill-wrap">
+                <div class="progress-label">Complétion des réponses : <strong>{{ cStats.progressPercent }}%</strong></div>
+                <div class="progress-track-sm">
+                  <div class="progress-fill-sm" [style.width.%]="cStats.progressPercent"></div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (coeffUpdateSuccessMessage(); as successMsg) {
+        <div class="alert alert-success eval-modal-alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span>{{ successMsg }}</span>
+        </div>
+      }
+
+      <!-- Modal Toolbar: Search, Theme Pills and Status Filter -->
+      <div class="eval-modal-toolbar">
+        <div class="modal-search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input 
+            type="text" 
+            class="modal-search-input" 
+            placeholder="Rechercher par code (A01), contrôle ISO (ISO 5.1), mot-clé..."
+            [value]="evalModalSearchQuery()"
+            (input)="evalModalSearchQuery.set($any($event.target).value)"
+          />
+        </div>
+
+        <div class="modal-filter-status-wrap">
+          <label for="modalStatusFilter">Réponse :</label>
+          <select 
+            id="modalStatusFilter" 
+            class="modal-status-select"
+            [value]="evalModalStatusFilter()"
+            (change)="setEvalModalStatus($any($event.target).value)">
+            <option value="ALL">Toutes les réponses</option>
+            <option value="IMPLEMENTED">Mis en œuvre</option>
+            <option value="IN_PROGRESS">En cours</option>
+            <option value="PLANNED">Planifié</option>
+            <option value="NOT_PLANNED">Non planifié</option>
+            <option value="NOT_APPLICABLE">Non applicable</option>
+          </select>
+        </div>
+
+        <div class="modal-theme-pills">
+          <button 
+            type="button" 
+            class="modal-pill" 
+            [class.active]="evalModalSelectedTheme() === 'ALL'"
+            (click)="setEvalModalTheme('ALL')">
+            Tous ({{ evalModalThemeCounts().total }})
+          </button>
+          <button 
+            type="button" 
+            class="modal-pill" 
+            [class.active]="evalModalSelectedTheme() === 'Organizational'"
+            (click)="setEvalModalTheme('Organizational')">
+            Organisationnel ({{ evalModalThemeCounts().org }})
+          </button>
+          <button 
+            type="button" 
+            class="modal-pill" 
+            [class.active]="evalModalSelectedTheme() === 'People'"
+            (click)="setEvalModalTheme('People')">
+            Personnel ({{ evalModalThemeCounts().people }})
+          </button>
+          <button 
+            type="button" 
+            class="modal-pill" 
+            [class.active]="evalModalSelectedTheme() === 'Physical'"
+            (click)="setEvalModalTheme('Physical')">
+            Physique ({{ evalModalThemeCounts().physical }})
+          </button>
+          <button 
+            type="button" 
+            class="modal-pill" 
+            [class.active]="evalModalSelectedTheme() === 'Technological'"
+            (click)="setEvalModalTheme('Technological')">
+            Technologique ({{ evalModalThemeCounts().tech }})
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body scrollable-body">
+        @if (evalModalFilteredItems().length === 0) {
+          <div class="state-container empty" style="padding: 24px;">
+            <p>Aucune mesure ne correspond à vos filtres de recherche.</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="data-table compact-table">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Code</th>
+                  <th style="width: 90px;">ISO 27002</th>
+                  <th style="width: 130px;">Thème</th>
+                  <th>Intitulé de la mesure</th>
+                  <th style="width: 220px;">Réponse soumise (Organisation)</th>
+                  <th style="width: 110px;">Défaut Secteur</th>
+                  <th style="width: 170px;">Coefficient (1-5)</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of evalModalFilteredItems(); track item.id) {
+                  <tr>
+                    <td>
+                      <span class="badge-code">{{ item.actionCode }}</span>
+                    </td>
+                    <td>
+                      <span class="font-mono">{{ item.isoControl }}</span>
+                    </td>
+                    <td>
+                      <span class="badge" [class]="getThemeBadgeClass(item.theme)">
+                        {{ getThemeLabel(item.theme) }}
+                      </span>
+                      <span class="cell-sub block-sub">{{ item.projectSubdomain }}</span>
+                    </td>
+                    <td class="description-cell">
+                      <span>{{ item.description }}</span>
+                    </td>
+                    <td class="submitted-response-cell">
+                      <div class="response-badge-wrap">
+                        <span class="impl-status-badge" [class]="getImplStatusBadgeClass(item.implementationStatus)">
+                          {{ getImplStatusLabel(item.implementationStatus) }}
+                        </span>
+                      </div>
+                      @if (item.justification) {
+                        <div class="note-justification" title="Justification apportée par l'organisme">
+                          <strong>Justif :</strong> {{ item.justification }}
+                        </div>
+                      }
+                      @if (item.comment) {
+                        <div class="note-comment" title="Commentaire apporté par l'organisme">
+                          <strong>Commentaire :</strong> {{ item.comment }}
+                        </div>
+                      }
+                      @if (!item.justification && !item.comment && (!item.implementationStatus || item.implementationStatus === 'NOT_PLANNED')) {
+                        <span class="text-muted italic">Non renseigné</span>
+                      }
+                    </td>
+                    <td>
+                      <span class="badge badge-neutral" title="Coefficient issu de la matrice sectorielle">
+                        Matrice : {{ item.sectorDefaultCoefficient || 3 }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="coeff-edit-wrap">
+                        <select 
+                          [value]="item.coefficient" 
+                          (change)="updateItemCoefficientInEval(activeEval.id, item.id, +$any($event.target).value)"
+                          class="coeff-select"
+                          [class.custom-value]="item.sectorDefaultCoefficient && item.coefficient !== item.sectorDefaultCoefficient"
+                          [disabled]="activeEval.status === 'COMPLETED' || coeffUpdatingItemId() === item.id"
+                          [title]="activeEval.status === 'COMPLETED' ? 'Évaluation clôturée — coefficients verrouillés' : 'Modifier le coefficient attribué'">
+                          <option [value]="1">1 — Très Faible</option>
+                          <option [value]="2">2 — Faible</option>
+                          <option [value]="3">3 — Moyen</option>
+                          <option [value]="4">4 — Élevé</option>
+                          <option [value]="5">5 — Critique</option>
+                        </select>
+                        @if (activeEval.status !== 'COMPLETED' && item.sectorDefaultCoefficient && item.coefficient !== item.sectorDefaultCoefficient) {
+                          <button 
+                            type="button" 
+                            class="btn-reset-coeff" 
+                            (click)="resetItemCoefficientInEval(activeEval.id, item.id)"
+                            title="Rétablir la valeur sectorielle par défaut ({{ item.sectorDefaultCoefficient }})">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <polyline points="1 4 1 10 7 10"/>
+                              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer margin-top-lg modal-footer-split">
+        <span class="modal-count-info">
+          Affichage de <strong>{{ evalModalFilteredItems().length }}</strong> / {{ activeEval.items?.length || 0 }} mesures
+        </span>
+        <div class="modal-actions-right">
+          <button type="button" class="btn-secondary" (click)="closeEvaluationDetail()">
+            Fermer
+          </button>
+
+          @if (activeEval.status === 'SUBMITTED') {
+            <button 
+              type="button" 
+              class="btn-secondary btn-revision" 
+              (click)="requestRevision(activeEval)" 
+              [disabled]="validatingEval()"
+              title="Demander des corrections à l'organisme">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+              </svg>
+              <span>Demander révision</span>
+            </button>
+            <button 
+              type="button" 
+              class="btn-primary btn-validate" 
+              (click)="validateEvaluation(activeEval)" 
+              [disabled]="validatingEval()"
+              title="Valider et clôturer définitivement le dossier">
+              @if (validatingEval()) {
+                <span class="spinner-sm"></span>
+                <span>Validation...</span>
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span>Valider et Clôturer</span>
+              }
+            </button>
+          }
+
+          @if (activeEval.status === 'DRAFT') {
+            <button type="button" class="btn-primary" (click)="promptAssignEvaluation(activeEval)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              <span>Envoyer l'évaluation</span>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

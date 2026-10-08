@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    # File-based H2 so created projects survive backend restarts
+    url: jdbc:h2:file:./data/psgdb;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: 9a67471b79f2910243e85e2b17b2b29ee5b2d2f7f98e6c71c4c1a5b82e2c0e86b0394017f8a846c82d49e6d01e18d6bc9f06a1d4715f2127263fb34e1c278912
+  expiration: 86400000 # 24 hours

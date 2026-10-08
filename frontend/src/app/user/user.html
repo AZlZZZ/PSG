@@ -1,0 +1,209 @@
+<div class="user-container">
+  <header class="user-header">
+    <div class="header-left">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Portail Organisme</span>
+          <span class="brand-badge">Conformité Cybersécurité PSG</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <div class="user-info">
+        <span class="user-role">Organisation</span>
+        <span class="user-email">{{ organizationLabel() }}</span>
+      </div>
+      <button type="button" class="btn-logout" (click)="authService.logout()" title="Déconnexion">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="user-main">
+    @if (successMessage(); as success) {
+      <div class="alert alert-success">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span>{{ success }}</span>
+      </div>
+    }
+    @if (errorMessage(); as error) {
+      <div class="alert alert-danger">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>{{ error }}</span>
+      </div>
+    }
+
+    @if (loading()) {
+      <div class="state-container">
+        <div class="spinner"></div>
+        <span>Chargement de votre évaluation assignée...</span>
+      </div>
+    } @else if (assignedEvaluation(); as activeEval) {
+
+      <div class="page-intro">
+        <div>
+          <h1>Évaluation de Conformité PSG #{{ activeEval.id }}</h1>
+          <p class="subtitle">
+            Secteur d'activité : <strong>{{ activeEval.sectorName || 'Non défini' }}</strong> | 
+            Nombre de mesures : <strong>{{ activeEval.items?.length || 0 }}</strong>
+          </p>
+        </div>
+        <div class="action-bar">
+          <span class="badge" [class]="getStatusBadgeClass(activeEval.status)">
+            {{ getStatusLabel(activeEval.status) }}
+          </span>
+          @if (activeEval.status !== 'SUBMITTED' && activeEval.status !== 'COMPLETED') {
+            <button
+              type="button"
+              class="btn-primary"
+              (click)="submitFinalEvaluation()"
+              [disabled]="submitting()">
+              @if (submitting()) {
+                <span class="spinner-sm"></span>
+                <span>Soumission...</span>
+              } @else {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>Soumettre l'évaluation</span>
+              }
+            </button>
+          } @else if (activeEval.status === 'SUBMITTED') {
+            <div class="status-notice-chip submitted">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span>Dossier soumis — En cours de revue par l'ANCS</span>
+            </div>
+          } @else if (activeEval.status === 'COMPLETED') {
+            <div class="status-notice-chip completed">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Évaluation clôturée & validée</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Progress Summary Banner -->
+      <div class="progress-banner">
+        <div class="progress-info">
+          <div class="progress-stat">
+            <span class="stat-value">{{ getAnsweredCount(activeEval) }}</span>
+            <span class="stat-label">Mesures renseignées</span>
+          </div>
+          <div class="progress-divider"></div>
+          <div class="progress-stat">
+            <span class="stat-value">{{ activeEval.items?.length || 0 }}</span>
+            <span class="stat-label">Total mesures</span>
+          </div>
+          <div class="progress-divider"></div>
+          <div class="progress-stat">
+            <span class="stat-value stat-highlight">{{ getComplianceCount(activeEval) }}</span>
+            <span class="stat-label">Mises en œuvre</span>
+          </div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-track">
+            <div
+              class="progress-bar-fill"
+              [style.width.%]="getProgressPercent(activeEval)">
+            </div>
+          </div>
+          <span class="progress-pct">{{ getProgressPercent(activeEval) }}% complété</span>
+        </div>
+      </div>
+
+      <div class="content-panel">
+        <div class="panel-header">
+          <div>
+            <h3>Mesures de Sécurité PSG</h3>
+            <p class="panel-sub">Suivi du statut de mise en œuvre de chaque contrôle de sécurité</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>ISO 27002</th>
+                <th>Thème / Sous-domaine</th>
+                <th>Description</th>
+                <th>Coeff</th>
+                <th>Statut de mise en œuvre</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of activeEval.items; track item.id) {
+                <tr [class.row-implemented]="item.implementationStatus === 'IMPLEMENTED'"
+                    [class.row-not-applicable]="item.implementationStatus === 'NOT_APPLICABLE'">
+                  <td class="font-mono"><strong>{{ item.actionCode }}</strong></td>
+                  <td class="font-mono">{{ item.isoControl }}</td>
+                  <td>
+                    <span class="badge badge-neutral">{{ item.theme }}</span>
+                    <span class="cell-sub block-sub">{{ item.projectSubdomain }}</span>
+                  </td>
+                  <td class="desc-cell">{{ item.description }}</td>
+                  <td><span class="badge badge-neutral">{{ item.coefficient }}</span></td>
+                  <td>
+                    @if (activeEval.status !== 'SUBMITTED' && activeEval.status !== 'COMPLETED') {
+                      <select
+                        [value]="item.implementationStatus"
+                        (change)="updateItemStatus(item.id, $any($event.target).value)"
+                        class="status-select"
+                        [class.implemented]="item.implementationStatus === 'IMPLEMENTED'"
+                        [class.in-progress]="item.implementationStatus === 'IN_PROGRESS'"
+                        [class.planned]="item.implementationStatus === 'PLANNED'"
+                        [class.not-planned]="item.implementationStatus === 'NOT_PLANNED'"
+                        [class.not-applicable]="item.implementationStatus === 'NOT_APPLICABLE'">
+                        <option value="NOT_PLANNED">Non planifié</option>
+                        <option value="PLANNED">Planifié (25%)</option>
+                        <option value="IN_PROGRESS">En cours (50%)</option>
+                        <option value="IMPLEMENTED">Mis en œuvre (100%)</option>
+                        <option value="NOT_APPLICABLE">Non Applicable</option>
+                      </select>
+                    } @else {
+                      <span class="badge" [class]="getImplBadgeClass(item.implementationStatus)">{{ getImplStatusLabel(item.implementationStatus) }}</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <div class="state-container empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <h3>Aucune évaluation assignée</h3>
+        <p>Aucune campagne d'évaluation de cybersécurité n'a encore été assignée à votre organisation.</p>
+      </div>
+    }
+  </main>
+</div>

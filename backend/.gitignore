@@ -1,0 +1,10 @@
+/target/
+/data/
+*.db
+*.mv.db
+*.trace.db
+.idea/
+*.iml
+.classpath
+.project
+.settings/
